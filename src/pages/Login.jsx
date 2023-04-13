@@ -23,6 +23,10 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../redux/actions/authActions";
+import { useForm } from "react-hook-form";
+import useLoading from "../hooks/useLoading";
+import { authTypes } from "../redux/types";
+
 // sections
 // import { LoginForm } from '../sections/auth/login';
 
@@ -64,6 +68,16 @@ export default function LoginPage() {
 
   const [showPassword, setShowPassword] = useState(false);
   const isLogged = useSelector((state) => state.auth.isLogged);
+  const isLoading = useLoading(authTypes.LOGIN_USER);
+
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: { email: "harsh@gmail.com", password: "11111111" },
+  });
 
   useEffect(() => {
     if (isLogged) {
@@ -71,8 +85,8 @@ export default function LoginPage() {
     }
   }, [isLogged]);
 
-  const handleClick = () => {
-    dispatch(loginUser());
+  const handleLogin = (values) => {
+    dispatch(loginUser(values));
   };
 
   return (
@@ -147,53 +161,68 @@ export default function LoginPage() {
                 OR
               </Typography>
             </Divider> */}
-            <Stack spacing={3}>
-              <TextField name="email" label="Email address" />
+            <form onSubmit={handleSubmit(handleLogin)}>
+              <Stack spacing={3}>
+                <TextField
+                  name="email"
+                  label="Email address"
+                  {...register("email", {
+                    required: true,
+                  })}
+                  error={Boolean(errors["email"])}
+                  helperText={errors?.["email"]?.message}
+                />
 
-              <TextField
-                name="password"
-                label="Password"
-                type={showPassword ? "text" : "password"}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={() => setShowPassword(!showPassword)}
-                        edge="end"
-                      >
-                        <Iconify
-                          icon={
-                            showPassword ? "eva:eye-fill" : "eva:eye-off-fill"
-                          }
-                        />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Stack>
+                <TextField
+                  name="password"
+                  label="Password"
+                  type={showPassword ? "text" : "password"}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={() => setShowPassword(!showPassword)}
+                          edge="end"
+                        >
+                          <Iconify
+                            icon={
+                              showPassword ? "eva:eye-fill" : "eva:eye-off-fill"
+                            }
+                          />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                  {...register("password", {
+                    required: true,
+                  })}
+                  error={Boolean(errors["password"])}
+                  helperText={errors?.["password"]?.message}
+                />
+              </Stack>
 
-            <Stack
-              direction="row"
-              alignItems="center"
-              justifyContent="space-between"
-              sx={{ my: 2 }}
-            >
-              <Checkbox name="remember" label="Remember me" />
-              <Link variant="subtitle2" underline="hover">
-                Forgot password?
-              </Link>
-            </Stack>
+              <Stack
+                direction="row"
+                alignItems="center"
+                justifyContent="space-between"
+                sx={{ my: 2 }}
+              >
+                <Checkbox name="remember" label="Remember me" />
+                <Link variant="subtitle2" underline="hover">
+                  Forgot password?
+                </Link>
+              </Stack>
 
-            <LoadingButton
-              fullWidth
-              size="large"
-              type="submit"
-              variant="contained"
-              onClick={handleClick}
-            >
-              Login
-            </LoadingButton>
+              <LoadingButton
+                fullWidth
+                size="large"
+                type="submit"
+                variant="contained"
+                loading={isLoading}
+              >
+                Login
+              </LoadingButton>
+            </form>
 
             {/* <LoginForm /> */}
           </StyledContent>

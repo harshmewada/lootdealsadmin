@@ -2,7 +2,7 @@ import { createReducer } from "@reduxjs/toolkit";
 import { authTypes } from "../types";
 
 const initialState = {
-  isLogged: true,
+  isLogged: false,
   name: "KDTECH",
   email: "kd@tech@gmail.com",
   photoURL: "https://",
@@ -10,7 +10,11 @@ const initialState = {
 };
 
 export const authReducer = createReducer(initialState, (builder) =>
-  builder.addCase(authTypes.LOGIN_USER, (state, action) => {
-    state.isLogged = true;
-  })
+  builder
+    .addCase(authTypes.LOGIN_USER, (state, action) => {
+      state.isLogged = true;
+    })
+    .addCase(authTypes.LOGOUT_USER, (state, action) => {
+      state.isLogged = false;
+    })
 );

@@ -11,7 +11,8 @@ import {
   IconButton,
   Popover,
 } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { logOutUser } from "../../../redux/actions/authActions";
 // mocks_
 // import account from '../../../_mock/account';
 
@@ -36,6 +37,7 @@ const MENU_OPTIONS = [
 
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
+  const dispatch = useDispatch();
   const { name, email, photoURL } = useSelector((state) => state.auth);
 
   const handleOpen = (event) => {
@@ -44,6 +46,7 @@ export default function AccountPopover() {
 
   const handleClose = () => {
     setOpen(null);
+    dispatch(logOutUser());
   };
 
   return (
