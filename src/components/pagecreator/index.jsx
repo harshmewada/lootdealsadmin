@@ -5,11 +5,11 @@ import { DataGrid } from "@mui/x-data-grid";
 import FormModal from "../FormModal";
 import { FORMMODE } from "../../enums";
 import ErrorBoundary from "../ErrorBoundary";
+import { useDispatch } from "react-redux";
 
 const PageCreator = ({
   tableData = [],
   tableHeaders = [],
-  tableActions = [],
   permission,
   isTabular = true,
   screenName,
@@ -23,17 +23,21 @@ const PageCreator = ({
   formFields,
   defaultFormData,
   dialogWidth,
+  onFormSubmit,
+  modalState,
+  setModalState,
+  getTableData,
 }) => {
+  const dispatch = useDispatch();
   const [selected, setSelected] = React.useState([]);
   const [paginationModel, setPaginationModel] = React.useState({
     page: 0,
     pageSize: 10,
   });
-  const [modalState, setModalState] = React.useState({
-    open: false,
-    modalData: undefined,
-    mode: undefined,
-  });
+
+  React.useEffect(() => {
+    dispatch(getTableData({ query: paginationModel }));
+  }, [paginationModel.page]);
 
   const onOpenFormModal = ({ mode, data }) =>
     setModalState({ open: true, mode, modalData: data });
@@ -58,10 +62,10 @@ const PageCreator = ({
     <ErrorBoundary>
       <>
         <FormModal
-          open={modalState.open}
+          open={modalState.open && modalState.mode !== FORMMODE.DELETE}
           onClose={onCloseFormModal}
           title={`${modalState.mode} ${formTitle || screenName}`}
-          onSave={() => {}}
+          onFormSubmit={(values) => onFormSubmit(values)}
           formFields={formFields}
           formData={{ ...defaultFormData, ...modalState.modalData }}
           dialogWidth={dialogWidth || "xl"}
@@ -106,6 +110,7 @@ const PageCreator = ({
               onSortModelChange={(data) => {
                 console.log("onSortModelChange", data);
               }}
+              getRowId={(row) => row._id}
             />
           )}
         </Card>

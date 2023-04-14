@@ -38,11 +38,12 @@ const TextInput = ({
           disabled={disabled}
           error={Boolean(error)}
           helperText={error}
-          value={value}
+          checked={value}
           onChange={onChange}
-          InputProps={{
-            readOnly: readOnly,
-          }}
+          // InputProps={{
+          //   readOnly: readOnly,
+          // }}
+          readOnly={readOnly}
           color="warning"
         />
       }

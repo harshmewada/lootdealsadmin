@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { Stack } from "@mui/system";
 import React from "react";
+import { FORMMODE } from "../../enums";
 import FormCreator from "../FormCreator";
 import Iconify from "../layout/iconify";
 
@@ -17,12 +18,13 @@ const FormModal = ({
   title,
   onClose = () => {},
   open,
-  onSave,
-  mode = "add",
+  onFormSubmit,
+  mode = FORMMODE.ADD,
   saveTitle = "Save",
   closeTitle = "Cancel",
   dialogWidth = "xl",
   formFields,
+  formData = {},
 }) => {
   const formRef = React.useRef();
   return (
@@ -58,11 +60,10 @@ const FormModal = ({
       <DialogContent sx={{ width: "100%" }}>
         <FormCreator
           formFields={formFields}
-          onSubmit={(values) => {
-            alert("Form Submit"), console.log("form submit", values);
-          }}
+          onSubmit={onFormSubmit}
           mode={mode}
           ref={formRef}
+          formData={formData}
         />
       </DialogContent>
       <Divider />
@@ -74,7 +75,7 @@ const FormModal = ({
               {closeTitle}
             </Button>
           )}
-          {onSave && (
+          {onFormSubmit && (
             <Button variant="contained" onClick={() => formRef.current.click()}>
               {saveTitle}
             </Button>

@@ -10,6 +10,7 @@ export const loginUser = ({ email, password }, callBack) => {
         email,
         password,
       },
+      enableMessages: false,
       url: userApi.LOGIN,
       callBack,
       successMessage: "Login Successfull",

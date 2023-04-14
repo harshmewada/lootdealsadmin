@@ -7,11 +7,11 @@ const fullGridWidth =
   "auto auto auto auto auto auto auto auto auto auto auto auto";
 const FormCreator = React.forwardRef(
   (
-    { mode, formData, formFields, selectOptions, onSubmit, onCancel },
+    { mode, formFields, selectOptions, onSubmit, onCancel, formData = {} },
     formRef
   ) => {
     const methods = useForm({
-      defaultValues: {},
+      defaultValues: { ...formData },
     });
 
     const {
@@ -19,7 +19,6 @@ const FormCreator = React.forwardRef(
       handleSubmit,
       formState: { errors, touchedFields },
     } = methods;
-    console.log("form Errors", errors);
     return (
       <FormProvider>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -35,10 +34,12 @@ const FormCreator = React.forwardRef(
               const Input = inputs[el.type];
 
               if (!Input) {
-                return <Box>Input of type {el.type} not found</Box>;
+                return (
+                  <Box key={el.name}>Input of type {el.type} not found</Box>
+                );
               }
               return (
-                <Box sx={{ gridColumn: `span ${el.width || 4}` }}>
+                <Box key={el.name} sx={{ gridColumn: `span ${el.width || 4}` }}>
                   <Input
                     {...el}
                     control={control}

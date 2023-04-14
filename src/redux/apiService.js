@@ -1,6 +1,6 @@
 import { loadingTypes } from "./types";
 import axios from "axios";
-
+import { showSnackbar } from "./actions/snackActions";
 const BASE_URL = import.meta.env.VITE_API_URL;
 
 const CancelToken = axios.CancelToken;
@@ -9,25 +9,49 @@ export let axiosCancelToken;
 const defaultHeaders = {
   "Content-type": "application/json; charset=UTF-8",
 };
+const formDataHeaders = {
+  "Content-type": "multipart/formdata; charset=UTF-8",
+};
+
 export const apiService =
   ({ getState, dispatch }) =>
   (next) =>
   async (action) => {
     if (action.request && !action.hideLoading) {
       dispatch({ type: loadingTypes.ADD_LOADING, payload: action.type });
-      const { method, url, headers, data, params, callBack } = action.request;
+      let {
+        method,
+        url,
+        headers,
+        data,
+        params,
+        callBack,
+        errorCallback,
+        isFormData,
+      } = action.request;
       try {
-        // await new Promise((resolve) => {
-        //   setTimeout(() => {
-        //     resolve();
-        //   }, 5000);
-        // });
-        const request = await axios({
+        const token = localStorage.getItem("token");
+        const authHeaders = {
+          Authorization: `Bearer ${token}`,
+        };
+
+        if (isFormData) {
+          const formData = new FormData();
+          const newData = Object.entries(data).map(([key, value]) => {
+            formData.append(key, value);
+          });
+          data = formData;
+        }
+        console.log("isFormData", data);
+
+        const response = await axios({
           method,
           url: BASE_URL + url,
           headers: {
             ...defaultHeaders,
             ...headers,
+            ...(isFormData && formDataHeaders),
+            ...(token && authHeaders),
           },
           data,
           params,
@@ -36,12 +60,40 @@ export const apiService =
           }),
         });
 
-        callBack?.();
-        dispatch({ type: loadingTypes.REMOVE_LOADING, payload: action.type });
-        dispatch({ type: action.type, data: request.data });
-      } catch (error) {
-        dispatch({ type: loadingTypes.REMOVE_LOADING, payload: action.type });
+        if (Boolean(action?.request?.enableMessages || true)) {
+          dispatch(
+            showSnackbar({
+              message:
+                response?.data?.message || action?.request.successMessage,
+              severity: "success",
+              timeOut: 6000,
+            })
+          );
+        }
 
+        callBack?.(response);
+        dispatch({ type: loadingTypes.REMOVE_LOADING, payload: action.type });
+        dispatch({ type: action.type, payload: response.data });
+      } catch (error) {
+        console.log(action, error);
+        if (error.toJSON().message === "Network Error") {
+          dispatch(
+            showSnackbar({
+              message: error.toJSON().message,
+              severity: "error",
+            })
+          );
+        } else if (Boolean(action?.request?.enableMessages || true)) {
+          dispatch(
+            showSnackbar({
+              message:
+                error?.response?.data?.message || action?.request.failMessage,
+              severity: "error",
+            })
+          );
+        }
+        dispatch({ type: loadingTypes.REMOVE_LOADING, payload: action.type });
+        errorCallback?.(error);
         if (axios.isCancel(error)) {
           console.log("HTTP call ended with cancel");
           return JSON.stringify(error);
