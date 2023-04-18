@@ -1,16 +1,20 @@
-import { IconButton } from "@mui/material";
 import moment from "moment";
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import Iconify from "../components/layout/iconify/Iconify";
+import { useSelector } from "react-redux";
 import TableImage from "../components/layout/TableImage";
 import PageCreator from "../components/pagecreator";
 import { DATETIMEFORMAT } from "../constants";
-import { FORMMODE } from "../enums";
-import { addPlatform, getPlatforms } from "../redux/actions/platformActions";
+import {
+  addPlatform,
+  deletePlatform,
+  editPlatform,
+  getPlatforms,
+} from "../redux/actions/platformActions";
+import { loadingSelector } from "../redux/reducers/loadingReducer";
+import { platformTypes } from "../redux/types";
 
 const Platforms = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const tableHeaders = [
     {
       field: "platformName",
@@ -52,47 +56,41 @@ const Platforms = () => {
       editable: false,
       valueGetter: ({ row }) => row?.products?.length,
     },
-
-    {
-      field: "actions",
-      type: "actions",
-      label: "Actions",
-      getActions: (params) => [
-        <IconButton mode={FORMMODE.EDIT}>
-          <Iconify icon="eva:edit-2-outline" />
-        </IconButton>,
-        <IconButton mode={FORMMODE.DELETE}>
-          <Iconify icon="eva:trash-2-outline" />
-        </IconButton>,
-      ],
-    },
   ];
 
   const tableData = useSelector((state) => state.common.platforms);
-  const [modalState, setModalState] = React.useState({
-    open: false,
-    modalData: undefined,
-    mode: undefined,
-  });
-  const onFormSubmit = (values) => {
-    console.log("onFormSubmit", values);
-    dispatch(addPlatform(values));
-  };
+
+  const isTableLoading = useSelector((state) =>
+    loadingSelector(state, platformTypes.GET_PLATFORMS)
+  );
+  const isFormLoading = useSelector((state) =>
+    loadingSelector(state, [
+      platformTypes.ADD_PLATFORM,
+      platformTypes.UPDATE_PLATFORM,
+      platformTypes.DELETE_PLATFORM,
+    ])
+  );
   return (
     <div>
       <PageCreator
         screenName={"Platforms"}
         tableHeaders={tableHeaders}
-        tableData={[...tableData]}
+        tableData={tableData?.data}
         formFields={formFields}
+        searchFields={searchFields}
         defaultFormData={{
           isActive: true,
         }}
         dialogWidth="lg"
-        modalState={modalState}
-        onFormSubmit={onFormSubmit}
-        setModalState={setModalState}
+        isLoading={isTableLoading}
+        isFormLoading={isFormLoading}
+        totalCount={tableData?.totalCount}
+        // onFormSubmit={onFormSubmit}
+        onAdd={addPlatform}
+        onEdit={editPlatform}
+        onDelete={deletePlatform}
         getTableData={getPlatforms}
+        deleteTitle="platformName"
       />
     </div>
   );
@@ -132,5 +130,17 @@ const formFields = [
     disabled: false,
     readOnly: false,
     width: 4,
+  },
+];
+const searchFields = [
+  {
+    type: "text",
+    name: "platformName",
+    label: "Platform Name",
+    placeholder: "Enter Platform Name",
+    required: false,
+    disabled: false,
+    readOnly: false,
+    width: 6,
   },
 ];

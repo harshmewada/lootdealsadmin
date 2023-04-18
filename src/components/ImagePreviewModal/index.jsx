@@ -20,7 +20,6 @@ const ImagePreviewModal = ({ closeTitle = "Cancel", dialogWidth = "xl" }) => {
     (state) => state.common.imagePreview
   );
 
-  console.log("image preview", src);
   const onClose = () => {
     dispatch(closeImagePreview());
   };

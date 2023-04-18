@@ -23,5 +23,8 @@ export const loadingSelector = createSelector(
     (state, category) => category,
   ],
   // Output selector gets (`items, category)` as args
-  (items, category) => items.includes(category)
+  (items, category) =>
+    Array.isArray(category)
+      ? items?.some((el) => category.includes(el))
+      : items.includes(category)
 );

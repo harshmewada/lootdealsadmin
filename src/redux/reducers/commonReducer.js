@@ -1,5 +1,10 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { commonTypes, platformTypes, productTypes } from "../types";
+import {
+  categoryTypes,
+  commonTypes,
+  platformTypes,
+  productTypes,
+} from "../types";
 
 const initialState = {
   imagePreview: {
@@ -8,6 +13,7 @@ const initialState = {
     title: "Image Preview",
   },
   platforms: [],
+  categories: [],
   products: [],
 };
 
@@ -25,6 +31,15 @@ const commonReducer = createReducer(initialState, (builder) => {
     })
     .addCase(platformTypes.GET_PLATFORMS, (state, action) => {
       state.platforms = action.payload.data;
+    })
+    .addCase(platformTypes.GET_ALL_PLATFORMS, (state, action) => {
+      state.platforms = action.payload.data;
+    })
+    .addCase(categoryTypes.GET_CATEGORYS, (state, action) => {
+      state.categories = action.payload.data;
+    })
+    .addCase(categoryTypes.GET_ALL_CATEGORYS, (state, action) => {
+      state.categories = action.payload.data;
     })
     .addCase(productTypes.GET_PRODUCTS, (state, action) => {
       state.products = action.payload.data;

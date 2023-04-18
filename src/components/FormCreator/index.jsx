@@ -1,13 +1,21 @@
 import { Box } from "@mui/system";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { useSearchForm } from "../../hooks/useSearchForm";
 import * as inputs from "./inputs/index";
 
-const fullGridWidth =
-  "auto auto auto auto auto auto auto auto auto auto auto auto";
+const fullGridWidth = "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr";
 const FormCreator = React.forwardRef(
   (
-    { mode, formFields, selectOptions, onSubmit, onCancel, formData = {} },
+    {
+      formFields,
+      selectOptions,
+      onSubmit,
+
+      formData = {},
+      isLoading,
+      isSearchForm = false,
+    },
     formRef
   ) => {
     const methods = useForm({
@@ -17,8 +25,11 @@ const FormCreator = React.forwardRef(
     const {
       control,
       handleSubmit,
-      formState: { errors, touchedFields },
+      formState: { errors },
     } = methods;
+
+    useSearchForm({ isSearchForm: isSearchForm, formRef, control, formFields });
+    console.log("form errors", errors);
     return (
       <FormProvider>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -44,6 +55,12 @@ const FormCreator = React.forwardRef(
                     {...el}
                     control={control}
                     error={errors?.[el.name]?.message}
+                    {...(isLoading && {
+                      readOnly: true,
+                    })}
+                    {...(el.hasExternalOptions && {
+                      options: selectOptions[el.name],
+                    })}
                   />
                 </Box>
               );

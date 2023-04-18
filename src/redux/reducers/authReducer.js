@@ -14,7 +14,6 @@ export const authReducer = createReducer(initialState, (builder) =>
   builder
     .addCase(authTypes.LOGIN_USER, (state, action) => {
       state.isLogged = true;
-      console.log("action", action);
       localStorage.setItem("token", action.payload.data.accessToken);
     })
     .addCase(authTypes.LOGOUT_USER, (state, action) => {

@@ -1,12 +1,4 @@
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  IconButton,
-  TextField,
-} from "@mui/material";
+import { Button, FormHelperText, IconButton } from "@mui/material";
 import React, { useRef } from "react";
 import { useController } from "react-hook-form";
 import { useDispatch } from "react-redux";
@@ -40,6 +32,7 @@ const ImageInput = ({
       ...rules,
     },
   });
+
   return (
     <>
       <Button
@@ -47,6 +40,7 @@ const ImageInput = ({
         color="primary"
         variant="outlined"
         size="large"
+        sx={{ height: (theme) => theme.spacing(7) }}
         startIcon={<Iconify icon="eva:cloud-upload-outline" width={20} />}
         endIcon={
           value && (
@@ -67,8 +61,9 @@ const ImageInput = ({
         }
         onClick={() => inputRef.current.click()}
       >
-        {value?.name || label}
+        {value?.name || `${label}${required && "*"}`}
       </Button>
+      {error && <FormHelperText error={true}>{error}</FormHelperText>}
       <input
         type={"file"}
         ref={inputRef}
@@ -84,6 +79,7 @@ const ImageInput = ({
           });
         }}
       />
+
       {/* <TextField
         label={label}
         placeholder={placeholder}
@@ -103,50 +99,3 @@ const ImageInput = ({
 };
 
 export default ImageInput;
-
-// import { TextField } from "@mui/material";
-// import React from "react";
-// import { Controller } from "react-hook-form";
-
-// const TextInput = ({
-//   control,
-//   name,
-//   label,
-//   required,
-//   disabled,
-//   readOnly,
-//   placeholder,
-//   error,
-//   rules = {},
-// }) => {
-//   return (
-//     <Controller
-//       control={control}
-//       name={name}
-//       rules={{
-//         required: {
-//           value: required,
-//           message: `${label} is required `,
-//         },
-//         ...rules,
-//       }}
-//       render={({ field }) => {
-//         console.log("field", field);
-//         return (
-//           <TextField
-//             {...field}
-//             label={label}
-//             placeholder={placeholder}
-//             fullWidth
-//             required={required}
-//             disabled={disabled}
-//             error={Boolean(error)}
-//             helperText={error}
-//           />
-//         );
-//       }}
-//     />
-//   );
-// };
-
-// export default TextInput;

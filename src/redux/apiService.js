@@ -42,7 +42,14 @@ export const apiService =
           });
           data = formData;
         }
-        console.log("isFormData", data);
+
+        if (params) {
+          Object.keys(params).forEach(
+            (key) =>
+              (params[key] === undefined || params[key] === "") &&
+              delete params[key]
+          );
+        }
 
         const response = await axios({
           method,
@@ -54,13 +61,13 @@ export const apiService =
             ...(token && authHeaders),
           },
           data,
-          params,
+          params: params,
           cancelToken: new CancelToken((c) => {
             axiosCancelToken = c;
           }),
         });
 
-        if (Boolean(action?.request?.enableMessages || true)) {
+        if (Boolean(action?.request?.enableMessages)) {
           dispatch(
             showSnackbar({
               message:
@@ -75,7 +82,6 @@ export const apiService =
         dispatch({ type: loadingTypes.REMOVE_LOADING, payload: action.type });
         dispatch({ type: action.type, payload: response.data });
       } catch (error) {
-        console.log(action, error);
         if (error.toJSON().message === "Network Error") {
           dispatch(
             showSnackbar({
@@ -95,7 +101,6 @@ export const apiService =
         dispatch({ type: loadingTypes.REMOVE_LOADING, payload: action.type });
         errorCallback?.(error);
         if (axios.isCancel(error)) {
-          console.log("HTTP call ended with cancel");
           return JSON.stringify(error);
         }
       }

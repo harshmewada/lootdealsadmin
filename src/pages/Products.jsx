@@ -1,83 +1,254 @@
+import moment from "moment";
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffectOnce } from "react-use";
+import TableImage from "../components/layout/TableImage";
+import PageCreator from "../components/pagecreator";
+import { DATETIMEFORMAT } from "../constants";
+import {
+  addProduct,
+  deleteProduct,
+  editProduct,
+  getProducts,
+} from "../redux/actions/productActions";
+import { getAllPlatforms } from "../redux/actions/platformActions";
+import { loadingSelector } from "../redux/reducers/loadingReducer";
+import { productTypes } from "../redux/types";
+import { getAllCategories } from "../redux/actions/categoryActions";
+import { Typography } from "@mui/material";
+import { FORMMODE } from "../enums";
 
 const Products = () => {
-  return <div>Products</div>;
+  const dispatch = useDispatch();
+  const CountColumn = ({ params }) => {
+    return (
+      <Typography
+        color="white"
+        sx={{
+          backgroundColor: (theme) => theme.palette.error.main,
+          paddingRight: (theme) => theme.spacing(),
+          paddingLeft: (theme) => theme.spacing(),
+        }}
+      >
+        {params.value}
+      </Typography>
+    );
+  };
+  const tableHeaders = [
+    {
+      field: "productName",
+      headerName: "Product Name",
+      type: "string",
+      editable: false,
+      flex: 1,
+    },
+    {
+      field: "productImage",
+      headerName: "Product Image",
+      type: "string",
+      editable: false,
+      flex: 1,
+      renderCell: (params) => <TableImage src={params.value} />,
+    },
+    {
+      field: "viewCount",
+      headerName: "Views",
+      type: "string",
+      flex: 0.5,
+      editable: false,
+      renderCell: (params) => <CountColumn params={params} />,
+    },
+    {
+      field: "platformName",
+      headerName: "Platform",
+      type: "string",
+      editable: false,
+      flex: 1,
+    },
+    {
+      field: "createdBy",
+      headerName: "Created By",
+      type: "string",
+      flex: 1,
+      editable: false,
+    },
+    {
+      field: "createdAt",
+      headerName: "Created At",
+      type: "dateTime",
+      flex: 1,
+      editable: false,
+      valueFormatter: ({ value }) => moment(value).format(DATETIMEFORMAT),
+    },
+  ];
+
+  const tableData = useSelector((state) => state.common.products);
+
+  const platforms = useSelector((state) => state.common.platforms);
+  const categories = useSelector((state) => state.common.categories);
+
+  const isTableLoading = useSelector((state) =>
+    loadingSelector(state, productTypes.GET_PRODUCTS)
+  );
+  const isFormLoading = useSelector((state) =>
+    loadingSelector(state, [
+      productTypes.ADD_PRODUCT,
+      productTypes.UPDATE_PRODUCT,
+      productTypes.DELETE_PRODUCT,
+    ])
+  );
+
+  useEffectOnce(() => {
+    dispatch(getAllPlatforms());
+    dispatch(getAllCategories());
+  }, []);
+  return (
+    <div>
+      <PageCreator
+        screenName={"Products"}
+        tableHeaders={tableHeaders}
+        tableData={tableData?.data}
+        formFields={formFields}
+        searchFields={searchFields}
+        defaultFormData={{
+          isActive: true,
+        }}
+        dialogWidth="lg"
+        isLoading={isTableLoading}
+        isFormLoading={isFormLoading}
+        totalCount={tableData?.totalCount}
+        // onFormSubmit={onFormSubmit}
+        onAdd={addProduct}
+        onEdit={editProduct}
+        onDelete={deleteProduct}
+        getTableData={getProducts}
+        deleteTitle="productName"
+        selectOptions={{
+          platformId: platforms?.data || [],
+          categoryId: categories?.data || [],
+        }}
+      />
+    </div>
+  );
 };
 
 export default Products;
 
-// import { IconButton } from "@mui/material";
-// import React from "react";
-// import Iconify from "../components/layout/iconify/Iconify";
-// import PageCreator from "../components/pagecreator";
+const formFields = [
+  {
+    type: "text",
+    name: "productName",
+    label: "Product Name",
+    placeholder: "Enter Product Name",
+    required: true,
+    disabled: false,
+    readOnly: false,
+    width: 6,
+  },
+  {
+    type: "image",
+    name: "productImage",
+    label: "Choose Product Image",
+    placeholder: "Choose Product Image",
+    required: true,
+    disabled: false,
+    readOnly: false,
+    width: 6,
+  },
 
-// const Products = () => {
-//   const tableHeaders = [
-//     { field: "id", headerName: "ID", flex: 1, minWidth: 150 },
-//     {
-//       field: "firstName",
-//       headerName: "First name",
-//       width: 150,
-//       editable: false,
-//     },
-//     {
-//       field: "lastName",
-//       headerName: "Last name",
-//       width: 150,
-//       editable: false,
-//     },
-//     {
-//       field: "age",
-//       headerName: "Age",
-//       type: "number",
-//       width: 110,
-//       editable: false,
-//     },
-//     {
-//       field: "fullName",
-//       headerName: "Full name",
-//       description: "This column has a value getter and is not sortable.",
-//       sortable: false,
-//       width: 160,
-//       valueGetter: (params) =>
-//         `${params.row.firstName || ""} ${params.row.lastName || ""}`,
-//     },
+  {
+    type: "float",
+    name: "mrpPrice",
+    label: "M.R.P ",
+    placeholder: "Enter M.R.P",
+    required: true,
+    disabled: false,
+    readOnly: false,
+    width: 3,
+  },
 
-//     {
-//       field: "actions",
-//       type: "actions",
-//       label: "Actions",
-//       getActions: (params) => [
-//         <IconButton>
-//           <Iconify icon="eva:edit-2-outline" />
-//         </IconButton>,
-//         <IconButton>
-//           <Iconify icon="eva:trash-2-outline" />
-//         </IconButton>,
-//       ],
-//     },
-//   ];
+  {
+    type: "float",
+    name: "sellPrice",
+    label: "Sell Price ",
+    placeholder: "Enter Sell Price",
+    required: true,
+    disabled: false,
+    readOnly: false,
+    width: 3,
+  },
 
-//   const tableData = [
-//     { id: 1, flex: 1, lastName: "Snow", firstName: "Jon", age: 35 },
-//     { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-//     { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-//     { id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
-//     { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-//     { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-//     { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-//     { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-//     { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-//   ];
-//   return (
-//     <div>
-//       <PageCreator
-//         screenName={"Products"}
-//         tableHeaders={tableHeaders}
-//         tableData={[...tableData]}
-//       />
-//     </div>
-//   );
-// };
+  {
+    type: "asyncselect",
+    name: "platformId",
+    label: "Choose Platform ",
+    placeholder: "Choose Platform",
+    optionLabel: "platformName",
+    optionValue: "_id",
+    hasExternalOptions: true,
+    required: true,
+    disabled: false,
+    readOnly: false,
+    width: 3,
+  },
 
-// export default Products;
+  {
+    type: "asyncselect",
+    name: "categoryId",
+    label: "Choose Category ",
+    placeholder: "Choose Category",
+    optionLabel: "categoryName",
+    optionValue: "_id",
+    hasExternalOptions: true,
+    required: true,
+    disabled: false,
+    readOnly: false,
+    width: 3,
+  },
+
+  {
+    type: "text",
+    name: "productUrl",
+    label: "Product Url",
+    placeholder: "Enter Product Url",
+    required: true,
+    disabled: false,
+    readOnly: false,
+    width: 12,
+  },
+
+  {
+    type: "boolean",
+    name: "isActive",
+    label: "Status",
+    placeholder: "Enter Status",
+    required: true,
+    disabled: false,
+    readOnly: false,
+    width: 2,
+  },
+
+  {
+    type: "boolean",
+    name: "isExpired",
+    hideAt: FORMMODE.ADD,
+    label: "Expired",
+    placeholder: "Enter Expired",
+    required: true,
+    disabled: false,
+    readOnly: false,
+    width: 3,
+  },
+];
+const searchFields = [
+  {
+    type: "text",
+    name: "productName",
+    label: "Product Name",
+    placeholder: "Enter Product Name",
+    required: false,
+    disabled: false,
+    readOnly: false,
+    width: 6,
+  },
+];

@@ -1,3 +1,5 @@
+import { useTheme } from "@emotion/react";
+import { LoadingButton } from "@mui/lab";
 import {
   Button,
   Dialog,
@@ -25,8 +27,11 @@ const FormModal = ({
   dialogWidth = "xl",
   formFields,
   formData = {},
+  isLoading,
+  selectOptions,
 }) => {
   const formRef = React.useRef();
+  const theme = useTheme();
   return (
     <Dialog
       open={open}
@@ -57,13 +62,15 @@ const FormModal = ({
         ) : null}
       </DialogTitle>
       <Divider />
-      <DialogContent sx={{ width: "100%" }}>
+      <DialogContent sx={{ width: theme.breakpoints.values[dialogWidth] }}>
         <FormCreator
           formFields={formFields}
           onSubmit={onFormSubmit}
           mode={mode}
           ref={formRef}
           formData={formData}
+          isLoading={isLoading}
+          selectOptions={selectOptions}
         />
       </DialogContent>
       <Divider />
@@ -76,9 +83,13 @@ const FormModal = ({
             </Button>
           )}
           {onFormSubmit && (
-            <Button variant="contained" onClick={() => formRef.current.click()}>
+            <LoadingButton
+              loading={isLoading}
+              variant="contained"
+              onClick={() => formRef.current.click()}
+            >
               {saveTitle}
-            </Button>
+            </LoadingButton>
           )}
         </Stack>
       </DialogActions>
