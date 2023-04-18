@@ -43,6 +43,7 @@ const PageCreator = ({
   totalCount,
   deleteTitle,
   selectOptions,
+  toolbarActions,
 }) => {
   const searchFormRef = useRef();
   const dispatch = useDispatch();
@@ -57,7 +58,7 @@ const PageCreator = ({
       dispatch(getTableData({ query: paginationModel }));
     },
     500,
-    [paginationModel]
+    [paginationModel, selected]
   );
   const [modalState, setModalState] = React.useState({
     open: false,
@@ -210,7 +211,13 @@ const PageCreator = ({
                     />
                   )}
                 </Box>
-                {onAdd && <AddActions />}
+                <Stack direction={"row"} spacing={2}>
+                  {toolbarActions &&
+                    toolbarActions.map((El) => (
+                      <El selected={selected} setSelected={setSelected} />
+                    ))}
+                  {onAdd && <AddActions />}
+                </Stack>
               </Stack>
             }
           />

@@ -18,6 +18,7 @@ export const productApi = {
   ADD_PRODUCT: "/product",
   UPDATE_PRODUCT: "/product",
   DELETE_PRODUCT: "/product",
+  BATCH_DELETE_PRODUCTS: "/product/batch",
 };
 
 export const categoryApi = {

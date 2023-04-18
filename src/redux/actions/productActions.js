@@ -62,3 +62,19 @@ export const deleteProduct = ({ data, callBack }) => {
     },
   };
 };
+
+export const batchDeleteProduct = ({ data, callBack }) => {
+  return {
+    type: productTypes.BATCH_DELETE_PRODUCTS,
+    request: {
+      method: REQUESTMETHOD.DELETE,
+      data: data,
+      url: productApi.BATCH_DELETE_PRODUCTS,
+      isFormData: false,
+      enableMessages: true,
+      successMessage: "Products deleted Successfully",
+      failMessage: "Failed to delete Product",
+      callBack,
+    },
+  };
+};

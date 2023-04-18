@@ -11,7 +11,7 @@ const FormCreator = React.forwardRef(
       formFields,
       selectOptions,
       onSubmit,
-
+      mode,
       formData = {},
       isLoading,
       isSearchForm = false,
@@ -42,6 +42,9 @@ const FormCreator = React.forwardRef(
             }}
           >
             {formFields.map((el) => {
+              if (el.hideAt && el.hideAt === mode) {
+                return;
+              }
               const Input = inputs[el.type];
 
               if (!Input) {

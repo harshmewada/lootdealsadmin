@@ -7,6 +7,7 @@ import PageCreator from "../components/pagecreator";
 import { DATETIMEFORMAT } from "../constants";
 import {
   addProduct,
+  batchDeleteProduct,
   deleteProduct,
   editProduct,
   getProducts,
@@ -15,11 +16,16 @@ import { getAllPlatforms } from "../redux/actions/platformActions";
 import { loadingSelector } from "../redux/reducers/loadingReducer";
 import { productTypes } from "../redux/types";
 import { getAllCategories } from "../redux/actions/categoryActions";
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { FORMMODE } from "../enums";
+import DeleteModal from "../components/DeleteModal";
 
 const Products = () => {
   const dispatch = useDispatch();
+  const [deleteData, setDeleteData] = React.useState({
+    deleteIds: undefined,
+    setSelected: undefined,
+  });
   const CountColumn = ({ params }) => {
     return (
       <Typography
@@ -44,10 +50,10 @@ const Products = () => {
     },
     {
       field: "productImage",
-      headerName: "Product Image",
+      headerName: " Image",
       type: "string",
       editable: false,
-      flex: 1,
+      flex: 0.5,
       renderCell: (params) => <TableImage src={params.value} />,
     },
     {
@@ -58,6 +64,21 @@ const Products = () => {
       editable: false,
       renderCell: (params) => <CountColumn params={params} />,
     },
+
+    {
+      field: "mrpPrice",
+      headerName: "M.R.P",
+      type: "string",
+      editable: false,
+      flex: 0.5,
+    },
+    {
+      field: "sellPrice",
+      headerName: "Sell Price",
+      type: "string",
+      editable: false,
+      flex: 0.5,
+    },
     {
       field: "platformName",
       headerName: "Platform",
@@ -66,10 +87,31 @@ const Products = () => {
       flex: 1,
     },
     {
+      field: "isExpired",
+      headerName: "Expired",
+      type: "boolean",
+      flex: 0.5,
+      editable: false,
+    },
+    {
+      field: "isActive",
+      headerName: "Active",
+      type: "boolean",
+      flex: 0.5,
+      editable: false,
+    },
+    {
+      field: "isAutoAdded",
+      headerName: "Auto Added",
+      type: "boolean",
+      flex: 1,
+      editable: false,
+    },
+    {
       field: "createdBy",
       headerName: "Created By",
       type: "string",
-      flex: 1,
+      flex: 0.7,
       editable: false,
     },
     {
@@ -102,8 +144,43 @@ const Products = () => {
     dispatch(getAllPlatforms());
     dispatch(getAllCategories());
   }, []);
+
+  const BatchAction = ({ selected, setSelected, getterFunctions }) => {
+    return (
+      selected?.length > 0 && (
+        <Button
+          variant="contained"
+          onClick={() =>
+            setDeleteData({
+              deleteIds: selected,
+              setSelected: setSelected,
+            })
+          }
+        >
+          Delete {selected?.length} Products
+        </Button>
+      )
+    );
+  };
+
   return (
     <div>
+      <DeleteModal
+        open={Boolean(deleteData?.deleteIds)}
+        title={`${deleteData?.deleteIds?.length} Products`}
+        onConfirm={() =>
+          dispatch(
+            batchDeleteProduct({
+              data: deleteData?.deleteIds,
+              callBack: () => {
+                deleteData.setSelected();
+                setDeleteData();
+              },
+            })
+          )
+        }
+        onClose={() => setDeleteIds()}
+      />
       <PageCreator
         screenName={"Products"}
         tableHeaders={tableHeaders}
@@ -117,7 +194,6 @@ const Products = () => {
         isLoading={isTableLoading}
         isFormLoading={isFormLoading}
         totalCount={tableData?.totalCount}
-        // onFormSubmit={onFormSubmit}
         onAdd={addProduct}
         onEdit={editProduct}
         onDelete={deleteProduct}
@@ -127,6 +203,7 @@ const Products = () => {
           platformId: platforms?.data || [],
           categoryId: categories?.data || [],
         }}
+        toolbarActions={[BatchAction]}
       />
     </div>
   );
@@ -238,6 +315,17 @@ const formFields = [
     disabled: false,
     readOnly: false,
     width: 3,
+  },
+
+  {
+    type: "richtext",
+    name: "description",
+    label: "Description",
+    placeholder: "Enter Description",
+    required: false,
+    disabled: false,
+    readOnly: false,
+    width: 12,
   },
 ];
 const searchFields = [
