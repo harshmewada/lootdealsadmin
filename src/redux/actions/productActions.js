@@ -1,6 +1,20 @@
 import { productApi } from "../../API";
 import { productTypes, REQUESTMETHOD } from "../types";
 
+export const getAmazonProduct = ({ query, callBack }) => {
+  return {
+    type: productTypes.GET_AMAZON_PRODUCT,
+    request: {
+      method: REQUESTMETHOD.GET,
+      params: query,
+
+      enableMessages: false,
+      url: productApi.GET_AMAZON_PRODUCT,
+      callBack,
+    },
+  };
+};
+
 export const getProducts = ({ query, callBack }) => {
   return {
     type: productTypes.GET_PRODUCTS,

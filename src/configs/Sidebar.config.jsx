@@ -1,4 +1,5 @@
 // component
+import Iconify from "../components/layout/iconify/Iconify";
 import SvgColor from "../components/layout/svg-color";
 
 // ----------------------------------------------------------------------
@@ -14,12 +15,13 @@ const sidebarConfig = [
   {
     title: "dashboard",
     path: "/",
-    icon: icon("ic_analytics"),
+    // icon:    icon("ic_analytics"),
+    icon: <Iconify icon="ic:twotone-monitor-heart" />,
   },
   {
-    title: "users",
-    path: "/users",
-    icon: icon("ic_user"),
+    title: "offers",
+    path: "/offers",
+    icon: <Iconify icon="ic:twotone-discount" />,
   },
   {
     title: "products",
@@ -29,13 +31,19 @@ const sidebarConfig = [
   {
     title: "categories",
     path: "/categories",
-    icon: icon("ic_cart"),
+    icon: <Iconify icon="icon-park:category-management" />,
   },
 
   {
     title: "platforms",
     path: "/platforms",
-    icon: icon("ic_cart"),
+    icon: <Iconify icon="ph:stack-duotone" />,
+  },
+
+  {
+    title: "setting",
+    path: "/setting",
+    icon: <Iconify icon="ant-design:setting-twotone" />,
   },
   // {
   //   title: "blog",

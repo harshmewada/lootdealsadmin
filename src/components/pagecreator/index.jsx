@@ -15,7 +15,7 @@ import ErrorBoundary from "../ErrorBoundary";
 import { useDispatch } from "react-redux";
 import DeleteModal from "../DeleteModal";
 import FormCreator from "../FormCreator";
-import { useDebounce, useEffectOnce } from "react-use";
+import { useDebounce, useEffectOnce, useTitle } from "react-use";
 import { Box } from "@mui/system";
 
 const PageCreator = ({
@@ -155,6 +155,7 @@ const PageCreator = ({
         break;
     }
   };
+  useTitle(screenName);
   return (
     <ErrorBoundary>
       <>
@@ -214,7 +215,15 @@ const PageCreator = ({
                 <Stack direction={"row"} spacing={2}>
                   {toolbarActions &&
                     toolbarActions.map((El) => (
-                      <El selected={selected} setSelected={setSelected} />
+                      <El
+                        selected={selected}
+                        setSelected={setSelected}
+                        modalState={modalState}
+                        setModalState={setModalState}
+                        getterFunction={() =>
+                          dispatch(getTableData({ query: paginationModel }))
+                        }
+                      />
                     ))}
                   {onAdd && <AddActions />}
                 </Stack>

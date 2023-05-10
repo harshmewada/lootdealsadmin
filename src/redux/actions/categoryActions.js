@@ -22,7 +22,7 @@ export const addCategory = ({ data, callBack }) => {
       method: REQUESTMETHOD.POST,
       data: data,
       url: categoryApi.ADD_CATEGORY,
-
+      isFormData: true,
       enableMessages: true,
       successMessage: "Category Added Successfully",
       failMessage: "Failed to add Category",
@@ -38,6 +38,7 @@ export const editCategory = ({ data, callBack }) => {
       method: REQUESTMETHOD.PATCH,
       data: data,
       url: categoryApi.UPDATE_CATEGORY,
+      isFormData: true,
 
       enableMessages: true,
       successMessage: "Category Updated Successfully",

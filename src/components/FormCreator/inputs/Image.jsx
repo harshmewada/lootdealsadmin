@@ -32,7 +32,13 @@ const ImageInput = ({
       ...rules,
     },
   });
-
+  const isValidUrl = (urlString) => {
+    try {
+      return Boolean(new URL(urlString));
+    } catch (e) {
+      return false;
+    }
+  };
   return (
     <>
       <Button
@@ -46,13 +52,14 @@ const ImageInput = ({
           value && (
             <IconButton
               onClick={(e) => {
+                e.stopPropagation();
+                const isValueUrl = isValidUrl(value);
                 dispatch(
                   openImagePreview({
-                    title: value?.name,
-                    src: URL.createObjectURL(value),
+                    title: isValueUrl ? value : value?.name,
+                    src: isValueUrl ? value : URL.createObjectURL(value),
                   })
                 );
-                e.stopPropagation();
               }}
             >
               <Iconify icon="eva:image-outline" width={20} />
@@ -61,7 +68,9 @@ const ImageInput = ({
         }
         onClick={() => inputRef.current.click()}
       >
-        {value?.name || `${label}${required && "*"}`}
+        {isValidUrl(value)
+          ? value
+          : value?.name || `${label}${required && "*"}`}
       </Button>
       {error && <FormHelperText error={true}>{error}</FormHelperText>}
       <input

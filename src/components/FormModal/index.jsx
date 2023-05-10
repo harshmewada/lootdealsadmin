@@ -75,7 +75,9 @@ const FormModal = ({
       </DialogContent>
       <Divider />
 
-      <DialogActions>
+      <DialogActions
+        sx={{ padding: (theme) => `${theme.spacing(2)} ${theme.spacing(3)}` }}
+      >
         <Stack direction={"row"} spacing={2}>
           {onClose && (
             <Button variant="outlined" onClick={onClose}>

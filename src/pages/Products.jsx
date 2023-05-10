@@ -19,12 +19,20 @@ import { getAllCategories } from "../redux/actions/categoryActions";
 import { Button, Typography } from "@mui/material";
 import { FORMMODE } from "../enums";
 import DeleteModal from "../components/DeleteModal";
+import AmazonProductModal from "../components/AmazonProductModal";
+
+import Iconify from "../components/layout/iconify/Iconify";
 
 const Products = () => {
   const dispatch = useDispatch();
   const [deleteData, setDeleteData] = React.useState({
     deleteIds: undefined,
     setSelected: undefined,
+  });
+
+  const [amazonModal, setAmazonModal] = React.useState({
+    open: false,
+    getterFn: undefined,
   });
   const CountColumn = ({ params }) => {
     return (
@@ -66,14 +74,14 @@ const Products = () => {
     },
 
     {
-      field: "mrpPrice",
+      field: "basePrice",
       headerName: "M.R.P",
       type: "string",
       editable: false,
       flex: 0.5,
     },
     {
-      field: "sellPrice",
+      field: "salePrice",
       headerName: "Sell Price",
       type: "string",
       editable: false,
@@ -85,6 +93,14 @@ const Products = () => {
       type: "string",
       editable: false,
       flex: 1,
+    },
+    {
+      field: "categoryId",
+      headerName: "Category",
+      type: "string",
+      editable: false,
+      flex: 1,
+      valueFormatter: ({ value }) => value.categoryName,
     },
     {
       field: "isExpired",
@@ -103,6 +119,13 @@ const Products = () => {
     {
       field: "isAutoAdded",
       headerName: "Auto Added",
+      type: "boolean",
+      flex: 1,
+      editable: false,
+    },
+    {
+      field: "isManyProducts",
+      headerName: "Many Products",
       type: "boolean",
       flex: 1,
       editable: false,
@@ -145,7 +168,7 @@ const Products = () => {
     dispatch(getAllCategories());
   }, []);
 
-  const BatchAction = ({ selected, setSelected, getterFunctions }) => {
+  const BatchAction = ({ selected, setSelected }) => {
     return (
       selected?.length > 0 && (
         <Button
@@ -160,6 +183,23 @@ const Products = () => {
           Delete {selected?.length} Products
         </Button>
       )
+    );
+  };
+
+  const AutoAddAction = ({ getterFunction }) => {
+    return (
+      <Button
+        variant="contained"
+        startIcon={<Iconify icon={"ri:amazon-fill"} />}
+        onClick={() =>
+          setAmazonModal({
+            open: true,
+            getterFn: getterFunction,
+          })
+        }
+      >
+        Add Amazon Product
+      </Button>
     );
   };
 
@@ -179,7 +219,34 @@ const Products = () => {
             })
           )
         }
-        onClose={() => setDeleteIds()}
+        onClose={() => setDeleteData()}
+      />
+      <AmazonProductModal
+        open={amazonModal?.open}
+        isLoading={isFormLoading}
+        formFields={formFields}
+        defaultFormData={{
+          isActive: true,
+          description,
+          isManyProducts: false,
+        }}
+        selectOptions={{
+          platformId: platforms?.data || [],
+          categoryId: categories?.data || [],
+        }}
+        title="Add Amazon Product"
+        onFormSubmit={(values) =>
+          dispatch(
+            addProduct({
+              data: values,
+              callBack: () => {
+                amazonModal?.getterFn();
+                setAmazonModal();
+              },
+            })
+          )
+        }
+        onClose={() => setAmazonModal()}
       />
       <PageCreator
         screenName={"Products"}
@@ -189,6 +256,8 @@ const Products = () => {
         searchFields={searchFields}
         defaultFormData={{
           isActive: true,
+          description: description,
+          isManyProducts: false,
         }}
         dialogWidth="lg"
         isLoading={isTableLoading}
@@ -203,13 +272,16 @@ const Products = () => {
           platformId: platforms?.data || [],
           categoryId: categories?.data || [],
         }}
-        toolbarActions={[BatchAction]}
+        toolbarActions={[AutoAddAction, BatchAction]}
       />
     </div>
   );
 };
 
 export default Products;
+
+const description =
+  "<span>How To Get The Deal:</span><br/><span>1. Click On Get Deal Button</span><br/><span>2. Add Product To Cart Or Click On Buy 1</span><br/><span>3. Select Address</span><br/><span>4. Select The Payment Method</span><br/><span>5. Place Order. Happy Looting</span>";
 
 const formFields = [
   {
@@ -235,7 +307,7 @@ const formFields = [
 
   {
     type: "float",
-    name: "mrpPrice",
+    name: "basePrice",
     label: "M.R.P ",
     placeholder: "Enter M.R.P",
     required: true,
@@ -246,7 +318,7 @@ const formFields = [
 
   {
     type: "float",
-    name: "sellPrice",
+    name: "salePrice",
     label: "Sell Price ",
     placeholder: "Enter Sell Price",
     required: true,
@@ -256,7 +328,7 @@ const formFields = [
   },
 
   {
-    type: "asyncselect",
+    type: "select",
     name: "platformId",
     label: "Choose Platform ",
     placeholder: "Choose Platform",
@@ -270,7 +342,7 @@ const formFields = [
   },
 
   {
-    type: "asyncselect",
+    type: "select",
     name: "categoryId",
     label: "Choose Category ",
     placeholder: "Choose Category",
@@ -295,6 +367,26 @@ const formFields = [
   },
 
   {
+    type: "richtext",
+    name: "description",
+    label: "Description",
+    placeholder: "Enter Description",
+    required: false,
+    disabled: false,
+    readOnly: false,
+    width: 12,
+  },
+  {
+    type: "boolean",
+    name: "isManyProducts",
+    label: "Many Products",
+    placeholder: "Enter Many Products",
+    required: false,
+    disabled: false,
+    readOnly: false,
+    width: 3,
+  },
+  {
     type: "boolean",
     name: "isActive",
     label: "Status",
@@ -315,17 +407,6 @@ const formFields = [
     disabled: false,
     readOnly: false,
     width: 3,
-  },
-
-  {
-    type: "richtext",
-    name: "description",
-    label: "Description",
-    placeholder: "Enter Description",
-    required: false,
-    disabled: false,
-    readOnly: false,
-    width: 12,
   },
 ];
 const searchFields = [

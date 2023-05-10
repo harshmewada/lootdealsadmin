@@ -8,7 +8,7 @@ const TableImage = ({ src }) => {
     <img
       src={`${import.meta.env.VITE_IMAGE_URL}/${src}`}
       alt={`${import.meta.env.VITE_IMAGE_URL}/${src}`}
-      style={{ width: 50, height: 50, objectFit: "contain", cursor: "pointer" }}
+      style={{ width: 40, height: 40, objectFit: "contain", cursor: "pointer" }}
       onClick={(e) => {
         e.stopPropagation();
         dispatch(

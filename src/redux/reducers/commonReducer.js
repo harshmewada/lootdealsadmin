@@ -2,8 +2,10 @@ import { createReducer } from "@reduxjs/toolkit";
 import {
   categoryTypes,
   commonTypes,
+  offerTypes,
   platformTypes,
   productTypes,
+  settingTypes,
 } from "../types";
 
 const initialState = {
@@ -13,8 +15,11 @@ const initialState = {
     title: "Image Preview",
   },
   platforms: [],
+  offers: [],
+
   categories: [],
   products: [],
+  setting: {},
 };
 
 const commonReducer = createReducer(initialState, (builder) => {
@@ -32,6 +37,10 @@ const commonReducer = createReducer(initialState, (builder) => {
     .addCase(platformTypes.GET_PLATFORMS, (state, action) => {
       state.platforms = action.payload.data;
     })
+
+    .addCase(offerTypes.GET_OFFERS, (state, action) => {
+      state.offers = action.payload.data;
+    })
     .addCase(platformTypes.GET_ALL_PLATFORMS, (state, action) => {
       state.platforms = action.payload.data;
     })
@@ -43,6 +52,9 @@ const commonReducer = createReducer(initialState, (builder) => {
     })
     .addCase(productTypes.GET_PRODUCTS, (state, action) => {
       state.products = action.payload.data;
+    })
+    .addCase(settingTypes.GET_SETTING, (state, action) => {
+      state.setting = action.payload.data;
     });
 });
 

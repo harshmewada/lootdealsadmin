@@ -1,6 +1,7 @@
 import moment from "moment";
 import React from "react";
 import { useSelector } from "react-redux";
+import TableImage from "../components/layout/TableImage";
 import PageCreator from "../components/pagecreator";
 import { DATETIMEFORMAT } from "../constants";
 import {
@@ -23,8 +24,24 @@ const Categories = () => {
       flex: 1,
     },
     {
+      field: "categoryImage",
+      headerName: " Image",
+      type: "string",
+      editable: false,
+      flex: 0.5,
+      renderCell: (params) => <TableImage src={params.value} />,
+    },
+    {
       field: "enableNotification",
       headerName: "Enable Notification",
+      type: "boolean",
+      editable: false,
+      flex: 1,
+    },
+
+    {
+      field: "showInHomepage",
+      headerName: "Show in Home ",
       type: "boolean",
       editable: false,
       flex: 1,
@@ -79,6 +96,8 @@ const Categories = () => {
         searchFields={searchFields}
         defaultFormData={{
           isActive: true,
+          enableNotification: false,
+          showInHomepage: false,
         }}
         dialogWidth="lg"
         isLoading={isTableLoading}
@@ -110,11 +129,22 @@ const formFields = [
   },
 
   {
+    type: "image",
+    name: "categoryImage",
+    label: "Choose Category Image",
+    placeholder: "Choose Category Image",
+    required: false,
+    disabled: false,
+    readOnly: false,
+    width: 4,
+  },
+
+  {
     type: "boolean",
     name: "enableNotification",
     label: "Enable Notification",
     placeholder: " Enable Notification",
-    required: true,
+    required: false,
     disabled: false,
     readOnly: false,
     width: 4,
@@ -124,7 +154,17 @@ const formFields = [
     name: "isActive",
     label: "Status",
     placeholder: "Enter Status",
-    required: true,
+    required: false,
+    disabled: false,
+    readOnly: false,
+    width: 4,
+  },
+  {
+    type: "boolean",
+    name: "showInHomepage",
+    label: "Show in App Homepage",
+    placeholder: "Enter Show in App Homepage",
+    required: false,
     disabled: false,
     readOnly: false,
     width: 4,

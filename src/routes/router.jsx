@@ -6,8 +6,10 @@ import Categories from "../pages/Categories";
 import Dashboard from "../pages/Dashboard";
 import Login from "../pages/Login";
 import Main from "../pages/Main";
+import Offers from "../pages/Offers";
 import Platforms from "../pages/Platforms";
 import Products from "../pages/Products";
+import Settings from "../pages/Settings";
 import Users from "../pages/Users";
 import ProtectedRoute from "./ProtectedRoute";
 export function Router() {
@@ -26,9 +28,15 @@ export function Router() {
           element: <Dashboard />,
         },
 
+        // {
+        //   path: "/users",
+        //   element: <Users />,
+        //   errorElement: <ErrorBoundary />,
+        // },
+
         {
-          path: "/users",
-          element: <Users />,
+          path: "/offers",
+          element: <Offers />,
           errorElement: <ErrorBoundary />,
         },
         {
@@ -47,6 +55,13 @@ export function Router() {
 
           path: "/categories",
           element: <Categories />,
+        },
+
+        {
+          errorElement: <ErrorBoundary />,
+
+          path: "/setting",
+          element: <Settings />,
         },
       ],
     },
