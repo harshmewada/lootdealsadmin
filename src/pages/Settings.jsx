@@ -139,9 +139,20 @@ const formFields = [
   {
     type: "boolean",
     name: "showTelegramBanner",
-    label: "Telegram Banner",
+    label: "Show Telegram Banner in App",
     placeholder: "Enter Telegram Banner",
     required: false,
+    disabled: false,
+    readOnly: false,
+    width: 4,
+  },
+
+  {
+    type: "image",
+    name: "telegramBannerImage",
+    label: "Choose Telegram Banner Image",
+    placeholder: "Choose Telegram Banner Image",
+    required: true,
     disabled: false,
     readOnly: false,
     width: 4,

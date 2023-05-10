@@ -20,7 +20,7 @@ export const editSettting = ({ data, callBack }) => {
       method: REQUESTMETHOD.POST,
       data: data,
       url: settingApi.UPDATE_SETTING,
-      isFormData: false,
+      isFormData: true,
       enableMessages: true,
       successMessage: "Setting Updated Successfully",
       failMessage: "Failed to update Setting",
