@@ -44,6 +44,7 @@ const PageCreator = ({
   deleteTitle,
   selectOptions,
   toolbarActions,
+  rowActions = [],
 }) => {
   const searchFormRef = useRef();
   const dispatch = useDispatch();
@@ -242,9 +243,11 @@ const PageCreator = ({
                   field: "actions",
                   type: "actions",
                   label: "Actions",
+                  flex: 1,
                   getActions: (params) => [
                     <EditActions data={params.row} />,
                     <DeleteActions data={params.row} />,
+                    ...rowActions.map((El) => <El data={params.row} />),
                   ],
                 },
               ]}

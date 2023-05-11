@@ -11,12 +11,13 @@ import {
   deleteProduct,
   editProduct,
   getProducts,
+  sendProductNotification,
 } from "../redux/actions/productActions";
 import { getAllPlatforms } from "../redux/actions/platformActions";
 import { loadingSelector } from "../redux/reducers/loadingReducer";
 import { productTypes } from "../redux/types";
 import { getAllCategories } from "../redux/actions/categoryActions";
-import { Button, Typography } from "@mui/material";
+import { Button, IconButton, Typography } from "@mui/material";
 import { FORMMODE } from "../enums";
 import DeleteModal from "../components/DeleteModal";
 import AmazonProductModal from "../components/AmazonProductModal";
@@ -100,7 +101,7 @@ const Products = () => {
       type: "string",
       editable: false,
       flex: 1,
-      valueFormatter: ({ value }) => value.categoryName,
+      valueFormatter: ({ value }) => value?.categoryName,
     },
     {
       field: "isExpired",
@@ -186,6 +187,19 @@ const Products = () => {
     );
   };
 
+  const BatchNotificationAction = ({ selected, setSelected }) => {
+    return (
+      selected?.length > 0 && (
+        <Button
+          variant="contained"
+          onClick={() => dispatch(sendProductNotification({ ids: selected }))}
+        >
+          Send Notifications of {selected?.length} Products
+        </Button>
+      )
+    );
+  };
+
   const AutoAddAction = ({ getterFunction }) => {
     return (
       <Button
@@ -200,6 +214,16 @@ const Products = () => {
       >
         Add Amazon Product
       </Button>
+    );
+  };
+
+  const NotificationActions = ({ data }) => {
+    return (
+      <IconButton
+        onClick={() => dispatch(sendProductNotification({ ids: [data._id] }))}
+      >
+        <Iconify icon="eva:bell-outline" />
+      </IconButton>
     );
   };
 
@@ -272,7 +296,8 @@ const Products = () => {
           platformId: platforms?.data || [],
           categoryId: categories?.data || [],
         }}
-        toolbarActions={[AutoAddAction, BatchAction]}
+        toolbarActions={[AutoAddAction, BatchAction, BatchNotificationAction]}
+        rowActions={[NotificationActions]}
       />
     </div>
   );

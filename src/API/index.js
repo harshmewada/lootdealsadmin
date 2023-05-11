@@ -36,6 +36,8 @@ export const productApi = {
   UPDATE_PRODUCT: "/product",
   DELETE_PRODUCT: "/product",
   BATCH_DELETE_PRODUCTS: "/product/batch",
+
+  SENT_NOTIFICATION: "/product/sendnotification",
 };
 
 export const categoryApi = {

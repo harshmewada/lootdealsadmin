@@ -92,3 +92,18 @@ export const batchDeleteProduct = ({ data, callBack }) => {
     },
   };
 };
+
+export const sendProductNotification = ({ ids }) => {
+  return {
+    type: productTypes.SENT_NOTIFICATION,
+    request: {
+      method: REQUESTMETHOD.POST,
+      data: { ids },
+      url: productApi.SENT_NOTIFICATION,
+      isFormData: false,
+      enableMessages: true,
+      successMessage: "Notification Sent Successfully",
+      failMessage: "Failed to send Notification",
+    },
+  };
+};
