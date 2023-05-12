@@ -93,6 +93,9 @@ const AmazonProductModal = ({
 
   useEffectOnce(() => {
     setProductData();
+    if (formRef.current) {
+      formRef.current.reset({});
+    }
   }, [open]);
   return (
     <Dialog
