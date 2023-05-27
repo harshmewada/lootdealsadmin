@@ -23,9 +23,13 @@ import DeleteModal from "../components/DeleteModal";
 import AmazonProductModal from "../components/AmazonProductModal";
 
 import Iconify from "../components/layout/iconify/Iconify";
+import useResponsive from "../hooks/useResponsive";
+import { addTableColumnMinWidth } from "../utils/addTableColumnMinWidth";
 
 const Products = () => {
   const dispatch = useDispatch();
+  const isMobile = useResponsive("down", "sm");
+
   const [deleteData, setDeleteData] = React.useState({
     deleteIds: undefined,
     setSelected: undefined,
@@ -49,6 +53,7 @@ const Products = () => {
       </Typography>
     );
   };
+
   const tableHeaders = [
     {
       field: "productName",
@@ -56,6 +61,7 @@ const Products = () => {
       type: "string",
       editable: false,
       flex: 1,
+      ...addTableColumnMinWidth(isMobile, 150),
     },
     {
       field: "productImage",
@@ -64,6 +70,7 @@ const Products = () => {
       editable: false,
       flex: 0.5,
       renderCell: (params) => <TableImage src={params.value} />,
+      ...addTableColumnMinWidth(isMobile, 70),
     },
     {
       field: "viewCount",
@@ -72,6 +79,7 @@ const Products = () => {
       flex: 0.5,
       editable: false,
       renderCell: (params) => <CountColumn params={params} />,
+      ...addTableColumnMinWidth(isMobile, 70),
     },
 
     {
@@ -80,6 +88,7 @@ const Products = () => {
       type: "string",
       editable: false,
       flex: 0.5,
+      ...addTableColumnMinWidth(isMobile, 80),
     },
     {
       field: "salePrice",
@@ -87,6 +96,7 @@ const Products = () => {
       type: "string",
       editable: false,
       flex: 0.5,
+      ...addTableColumnMinWidth(isMobile, 80),
     },
     {
       field: "platformName",
@@ -94,6 +104,7 @@ const Products = () => {
       type: "string",
       editable: false,
       flex: 1,
+      ...addTableColumnMinWidth(isMobile, 80),
     },
     {
       field: "categoryId",
@@ -102,6 +113,7 @@ const Products = () => {
       editable: false,
       flex: 1,
       valueFormatter: ({ value }) => value?.categoryName,
+      ...addTableColumnMinWidth(isMobile, 100),
     },
     {
       field: "isExpired",
@@ -109,6 +121,7 @@ const Products = () => {
       type: "boolean",
       flex: 0.5,
       editable: false,
+      ...addTableColumnMinWidth(isMobile, 80),
     },
     {
       field: "isActive",
@@ -116,6 +129,7 @@ const Products = () => {
       type: "boolean",
       flex: 0.5,
       editable: false,
+      ...addTableColumnMinWidth(isMobile, 80),
     },
     {
       field: "isAutoAdded",
@@ -123,6 +137,7 @@ const Products = () => {
       type: "boolean",
       flex: 1,
       editable: false,
+      ...addTableColumnMinWidth(isMobile, 80),
     },
     {
       field: "isManyProducts",
@@ -130,6 +145,7 @@ const Products = () => {
       type: "boolean",
       flex: 1,
       editable: false,
+      ...addTableColumnMinWidth(isMobile, 70),
     },
     {
       field: "createdBy",
@@ -137,6 +153,7 @@ const Products = () => {
       type: "string",
       flex: 0.7,
       editable: false,
+      ...addTableColumnMinWidth(isMobile, 80),
     },
     {
       field: "createdAt",
@@ -145,6 +162,7 @@ const Products = () => {
       flex: 1,
       editable: false,
       valueFormatter: ({ value }) => moment(value).format(DATETIMEFORMAT),
+      ...addTableColumnMinWidth(isMobile, 150),
     },
   ];
 
@@ -314,6 +332,8 @@ const Products = () => {
               }),
           },
         ]}
+        mobileRowActionColumnWidth={150}
+        selectable={!isMobile}
       />
     </div>
   );
@@ -334,6 +354,7 @@ const formFields = [
     disabled: false,
     readOnly: false,
     width: 6,
+    mobileWidth: 12,
   },
   {
     type: "image",
@@ -344,6 +365,7 @@ const formFields = [
     disabled: false,
     readOnly: false,
     width: 6,
+    mobileWidth: 12,
   },
 
   {
@@ -355,6 +377,7 @@ const formFields = [
     disabled: false,
     readOnly: false,
     width: 3,
+    mobileWidth: 12,
   },
 
   {
@@ -366,6 +389,7 @@ const formFields = [
     disabled: false,
     readOnly: false,
     width: 3,
+    mobileWidth: 12,
   },
 
   {
@@ -380,6 +404,7 @@ const formFields = [
     disabled: false,
     readOnly: false,
     width: 3,
+    mobileWidth: 12,
   },
 
   {
@@ -394,6 +419,7 @@ const formFields = [
     disabled: false,
     readOnly: false,
     width: 3,
+    mobileWidth: 12,
   },
 
   {
@@ -405,6 +431,7 @@ const formFields = [
     disabled: false,
     readOnly: false,
     width: 12,
+    mobileWidth: 12,
   },
 
   {
@@ -416,6 +443,7 @@ const formFields = [
     disabled: false,
     readOnly: false,
     width: 12,
+    mobileWidth: 12,
   },
   {
     type: "boolean",
@@ -426,6 +454,7 @@ const formFields = [
     disabled: false,
     readOnly: false,
     width: 3,
+    mobileWidth: 12,
   },
   {
     type: "boolean",
@@ -436,6 +465,7 @@ const formFields = [
     disabled: false,
     readOnly: false,
     width: 2,
+    mobileWidth: 12,
   },
 
   {
@@ -448,6 +478,7 @@ const formFields = [
     disabled: false,
     readOnly: false,
     width: 3,
+    mobileWidth: 12,
   },
 ];
 const searchFields = [

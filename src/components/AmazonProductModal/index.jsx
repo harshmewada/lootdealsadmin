@@ -89,7 +89,6 @@ const AmazonProductModal = ({
   const amazonPlatformId = selectOptions?.platformId?.find(
     (el) => el.platformName === "Amazon"
   )?._id;
-  console.log("amazonPlatformId", amazonPlatformId);
 
   useEffectOnce(() => {
     setProductData();

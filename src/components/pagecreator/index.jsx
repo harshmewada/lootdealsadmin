@@ -22,6 +22,7 @@ import { Box } from "@mui/system";
 import { useTheme } from "@emotion/react";
 import SearchDrawerMobile from "../layout/SearchDrawerMobile";
 import ActionMenu from "../layout/ActionMenu";
+import useResponsive from "../../hooks/useResponsive";
 
 const PageCreator = ({
   tableData = [],
@@ -51,6 +52,7 @@ const PageCreator = ({
   toolbarActions,
   rowActions = [],
   mobileToolbarActions = [],
+  mobileRowActionColumnWidth = null,
 }) => {
   const theme = useTheme();
   const searchFormRef = useRef();
@@ -255,7 +257,15 @@ const PageCreator = ({
                     alignItems={"center"}
                   >
                     {searchFields && (
-                      <SearchDrawerMobile ref={searchFormRef}>
+                      <SearchDrawerMobile
+                        ref={searchFormRef}
+                        onClearSearch={() =>
+                          setPaginationModel({
+                            page: 0,
+                            pageSize: 10,
+                          })
+                        }
+                      >
                         <FormCreator
                           ref={searchFormRef}
                           formFields={searchFields}
@@ -311,6 +321,8 @@ const PageCreator = ({
               ref={tableRef}
               autoHeight
               rows={tableData}
+              // sx={{ width: "100%" }}
+
               columns={[
                 ...tableHeaders,
                 {
@@ -323,6 +335,10 @@ const PageCreator = ({
                     <DeleteActions data={params.row} />,
                     ...rowActions.map((El) => <El data={params.row} />),
                   ],
+
+                  ...(mobileRowActionColumnWidth && {
+                    minWidth: mobileRowActionColumnWidth,
+                  }),
                 },
               ]}
               checkboxSelection={selectable}

@@ -1,6 +1,7 @@
 import { Box } from "@mui/system";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import useResponsive from "../../hooks/useResponsive";
 import { useSearchForm } from "../../hooks/useSearchForm";
 import * as inputs from "./inputs/index";
 
@@ -21,6 +22,7 @@ const FormCreator = React.forwardRef(
     const methods = useForm({
       defaultValues: { ...formData },
     });
+    const isMobile = useResponsive("down", "sm");
 
     const {
       control,
@@ -53,7 +55,14 @@ const FormCreator = React.forwardRef(
                 );
               }
               return (
-                <Box key={el.name} sx={{ gridColumn: `span ${el.width || 4}` }}>
+                <Box
+                  key={el.name}
+                  sx={{
+                    gridColumn: `span ${
+                      isMobile ? el.mobileWidth || 12 : el.width || 4
+                    }`,
+                  }}
+                >
                   <Input
                     {...el}
                     control={control}

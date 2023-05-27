@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import TableImage from "../components/layout/TableImage";
 import PageCreator from "../components/pagecreator";
 import { DATETIMEFORMAT } from "../constants";
+import useResponsive from "../hooks/useResponsive";
 import {
   addPlatform,
   deletePlatform,
@@ -12,8 +13,11 @@ import {
 } from "../redux/actions/platformActions";
 import { loadingSelector } from "../redux/reducers/loadingReducer";
 import { platformTypes } from "../redux/types";
+import { addTableColumnMinWidth } from "../utils/addTableColumnMinWidth";
 
 const Platforms = () => {
+  const isMobile = useResponsive("down", "sm");
+
   // const dispatch = useDispatch();
   const tableHeaders = [
     {
@@ -22,6 +26,8 @@ const Platforms = () => {
       type: "string",
       editable: false,
       flex: 1,
+
+      ...addTableColumnMinWidth(isMobile, 100),
     },
     {
       field: "platformImage",
@@ -30,6 +36,7 @@ const Platforms = () => {
       editable: false,
       flex: 1,
       renderCell: (params) => <TableImage src={params.value} />,
+      ...addTableColumnMinWidth(isMobile, 70),
     },
     {
       field: "createdBy",
@@ -37,6 +44,7 @@ const Platforms = () => {
       type: "string",
       flex: 0.5,
       editable: false,
+      ...addTableColumnMinWidth(isMobile, 100),
     },
     {
       field: "createdAt",
@@ -45,6 +53,7 @@ const Platforms = () => {
       flex: 0.5,
       editable: false,
       valueFormatter: ({ value }) => moment(value).format(DATETIMEFORMAT),
+      ...addTableColumnMinWidth(isMobile, 150),
     },
     {
       field: "products",
@@ -55,6 +64,7 @@ const Platforms = () => {
 
       editable: false,
       valueGetter: ({ row }) => row?.products?.length,
+      ...addTableColumnMinWidth(isMobile, 150),
     },
   ];
 
@@ -91,6 +101,8 @@ const Platforms = () => {
         onDelete={deletePlatform}
         getTableData={getPlatforms}
         deleteTitle="platformName"
+        selectable={!isMobile}
+        mobileRowActionColumnWidth={120}
       />
     </div>
   );

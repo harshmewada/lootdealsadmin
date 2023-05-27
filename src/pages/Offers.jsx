@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import TableImage from "../components/layout/TableImage";
 import PageCreator from "../components/pagecreator";
 import { DATETIMEFORMAT } from "../constants";
+import useResponsive from "../hooks/useResponsive";
 import {
   addOffer,
   deleteOffer,
@@ -12,8 +13,11 @@ import {
 } from "../redux/actions/offerActions";
 import { loadingSelector } from "../redux/reducers/loadingReducer";
 import { offerTypes } from "../redux/types";
+import { addTableColumnMinWidth } from "../utils/addTableColumnMinWidth";
 
 const Offers = () => {
+  const isMobile = useResponsive("down", "sm");
+
   // const dispatch = useDispatch();
   const tableHeaders = [
     {
@@ -22,6 +26,8 @@ const Offers = () => {
       type: "string",
       editable: false,
       flex: 1,
+
+      ...addTableColumnMinWidth(isMobile, 100),
     },
     {
       field: "offerImage",
@@ -30,6 +36,7 @@ const Offers = () => {
       editable: false,
       flex: 1,
       renderCell: (params) => <TableImage src={params.value} />,
+      ...addTableColumnMinWidth(isMobile, 70),
     },
     {
       field: "showInHomepage",
@@ -37,6 +44,7 @@ const Offers = () => {
       type: "boolean",
       editable: false,
       flex: 1,
+      ...addTableColumnMinWidth(isMobile, 70),
     },
     {
       field: "createdBy",
@@ -44,6 +52,7 @@ const Offers = () => {
       type: "string",
       flex: 0.5,
       editable: false,
+      ...addTableColumnMinWidth(isMobile, 100),
     },
     {
       field: "createdAt",
@@ -52,6 +61,7 @@ const Offers = () => {
       flex: 0.5,
       editable: false,
       valueFormatter: ({ value }) => moment(value).format(DATETIMEFORMAT),
+      ...addTableColumnMinWidth(isMobile, 150),
     },
   ];
 
@@ -89,6 +99,8 @@ const Offers = () => {
         onDelete={deleteOffer}
         getTableData={getOffers}
         deleteTitle="offerName"
+        mobileRowActionColumnWidth={120}
+        selectable={!isMobile}
       />
     </div>
   );

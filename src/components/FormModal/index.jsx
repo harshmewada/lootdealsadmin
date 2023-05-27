@@ -13,6 +13,7 @@ import {
 import { Stack } from "@mui/system";
 import React from "react";
 import { FORMMODE } from "../../enums";
+import useResponsive from "../../hooks/useResponsive";
 import FormCreator from "../FormCreator";
 import Iconify from "../layout/iconify";
 
@@ -32,13 +33,15 @@ const FormModal = ({
 }) => {
   const formRef = React.useRef();
   const theme = useTheme();
+  const isMobile = useResponsive("down", "sm");
+
   return (
     <Dialog
       open={open}
       onClose={onClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
-      maxWidth={dialogWidth}
+      maxWidth={isMobile ? "xl" : dialogWidth}
     >
       <DialogTitle
         sx={{
@@ -62,7 +65,12 @@ const FormModal = ({
         ) : null}
       </DialogTitle>
       <Divider />
-      <DialogContent sx={{ width: theme.breakpoints.values[dialogWidth] }}>
+      <DialogContent
+        sx={{
+          width: isMobile ? "100%" : theme.breakpoints.values[dialogWidth],
+          ...(isMobile && { minWidth: "80vw" }),
+        }}
+      >
         <FormCreator
           formFields={formFields}
           onSubmit={onFormSubmit}
