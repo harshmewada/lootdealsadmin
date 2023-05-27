@@ -5,6 +5,8 @@ import {
   Divider,
   IconButton,
   Stack,
+  Hidden,
+  Typography,
 } from "@mui/material";
 import React, { useRef } from "react";
 import Iconify from "../layout/iconify/Iconify";
@@ -12,11 +14,14 @@ import { DataGrid } from "@mui/x-data-grid";
 import FormModal from "../FormModal";
 import { FORMMODE } from "../../enums";
 import ErrorBoundary from "../ErrorBoundary";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import DeleteModal from "../DeleteModal";
 import FormCreator from "../FormCreator";
 import { useDebounce, useEffectOnce, useTitle } from "react-use";
 import { Box } from "@mui/system";
+import { useTheme } from "@emotion/react";
+import SearchDrawerMobile from "../layout/SearchDrawerMobile";
+import ActionMenu from "../layout/ActionMenu";
 
 const PageCreator = ({
   tableData = [],
@@ -45,10 +50,13 @@ const PageCreator = ({
   selectOptions,
   toolbarActions,
   rowActions = [],
+  mobileToolbarActions = [],
 }) => {
+  const theme = useTheme();
   const searchFormRef = useRef();
   const dispatch = useDispatch();
   const [selected, setSelected] = React.useState([]);
+  // const selected = useSelector((state) => state.common.selected);
 
   const [paginationModel, setPaginationModel] = React.useState({
     page: 0,
@@ -160,6 +168,7 @@ const PageCreator = ({
   return (
     <ErrorBoundary>
       <>
+        <Hidden mdDown></Hidden>
         <FormModal
           open={modalState.open && modalState.mode !== FORMMODE.DELETE}
           onClose={onCloseFormModal}
@@ -186,49 +195,114 @@ const PageCreator = ({
               "& .MuiCardHeader-action": {
                 // width: "40%",
                 flex: 10,
+                [theme.breakpoints.down("md")]: {
+                  flex: 10,
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                },
               },
             }}
             action={
-              <Stack
-                justifyContent={"space-between"}
-                direction="row"
-                alignItems={"center"}
-                // sx={{
-                //   backgroundColor: (theme) => theme.palette.primary.main,
-                //   width: "100%",
-                // }}
-              >
-                <Box display={"flex"} justifyContent="flex-end">
-                  {searchFields && (
-                    <FormCreator
-                      ref={searchFormRef}
-                      formFields={searchFields}
-                      isSearchForm={true}
-                      onSubmit={(val) => {
-                        setPaginationModel({
-                          ...paginationModel,
-                          ...val,
-                        });
-                      }}
+              <>
+                <Hidden mdDown>
+                  <Stack
+                    justifyContent={"space-between"}
+                    direction="row"
+                    alignItems={"center"}
+                    // sx={{
+                    //   backgroundColor: (theme) => theme.palette.primary.main,
+                    //   width: "100%",
+                    // }}
+                  >
+                    <Box display={"flex"} justifyContent="flex-end">
+                      {searchFields && (
+                        <FormCreator
+                          ref={searchFormRef}
+                          formFields={searchFields}
+                          isSearchForm={true}
+                          onSubmit={(val) => {
+                            setPaginationModel({
+                              ...paginationModel,
+                              ...val,
+                            });
+                          }}
+                        />
+                      )}
+                    </Box>
+                    <Stack direction={"row"} spacing={2}>
+                      {toolbarActions &&
+                        toolbarActions.map((El) => (
+                          <El
+                            selected={selected}
+                            setSelected={setSelected}
+                            modalState={modalState}
+                            setModalState={setModalState}
+                            getterFunction={() =>
+                              dispatch(getTableData({ query: paginationModel }))
+                            }
+                          />
+                        ))}
+                      {onAdd && <AddActions />}
+                    </Stack>
+                  </Stack>
+                </Hidden>
+
+                <Hidden smUp>
+                  <Stack
+                    justifyContent={"space-between"}
+                    direction="row"
+                    alignItems={"center"}
+                  >
+                    {searchFields && (
+                      <SearchDrawerMobile ref={searchFormRef}>
+                        <FormCreator
+                          ref={searchFormRef}
+                          formFields={searchFields}
+                          isSearchForm={false}
+                          onSubmit={(val) => {
+                            setPaginationModel({
+                              ...paginationModel,
+                              ...val,
+                            });
+                          }}
+                        />
+                      </SearchDrawerMobile>
+                    )}
+
+                    <ActionMenu
+                      data={[
+                        {
+                          label: `Add ${screenName}`,
+                          icon: "eva:plus-circle-outline",
+                          onClick: () =>
+                            onOpenFormModal({ mode: FORMMODE.ADD }),
+                        },
+
+                        ...mobileToolbarActions.map((el) => {
+                          return {
+                            ...el,
+                            ...(el.hasGetterFn && {
+                              onClick: (d) =>
+                                el.onClick({
+                                  data: d,
+                                  getterFunction: () =>
+                                    dispatch(
+                                      getTableData({ query: paginationModel })
+                                    ),
+                                  selected,
+                                  setSelected: setSelected,
+                                  modalState,
+                                  setModalState,
+                                }),
+                            }),
+                          };
+                        }),
+                      ]}
                     />
-                  )}
-                </Box>
-                <Stack direction={"row"} spacing={2}>
-                  {toolbarActions &&
-                    toolbarActions.map((El) => (
-                      <El
-                        selected={selected}
-                        setSelected={setSelected}
-                        modalState={modalState}
-                        setModalState={setModalState}
-                        getterFunction={() =>
-                          dispatch(getTableData({ query: paginationModel }))
-                        }
-                      />
-                    ))}
-                  {onAdd && <AddActions />}
-                </Stack>
-              </Stack>
+                  </Stack>
+                </Hidden>
+              </>
             }
           />
           <Divider />

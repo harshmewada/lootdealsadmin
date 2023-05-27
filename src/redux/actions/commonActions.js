@@ -15,3 +15,10 @@ export const closeImagePreview = () => {
     type: commonTypes.CLOSE_IMAGE_PREVIEW,
   };
 };
+
+export const setSelected = (data = []) => {
+  return {
+    type: commonTypes.SET_SELECTED,
+    payload: data,
+  };
+};

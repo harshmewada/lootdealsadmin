@@ -173,6 +173,7 @@ const Products = () => {
     return (
       selected?.length > 0 && (
         <Button
+          key="batchAction"
           variant="contained"
           onClick={() =>
             setDeleteData({
@@ -191,6 +192,7 @@ const Products = () => {
     return (
       selected?.length > 0 && (
         <Button
+          key="BatchNotificationAction"
           variant="contained"
           onClick={() => dispatch(sendProductNotification({ ids: selected }))}
         >
@@ -203,6 +205,7 @@ const Products = () => {
   const AutoAddAction = ({ getterFunction }) => {
     return (
       <Button
+        key="AutoAddAction"
         variant="contained"
         startIcon={<Iconify icon={"ri:amazon-fill"} />}
         onClick={() =>
@@ -220,6 +223,7 @@ const Products = () => {
   const NotificationActions = ({ data }) => {
     return (
       <IconButton
+        key={"NotificationActions" + data._id}
         onClick={() => dispatch(sendProductNotification({ ids: [data._id] }))}
       >
         <Iconify icon="eva:bell-outline" />
@@ -298,6 +302,18 @@ const Products = () => {
         }}
         toolbarActions={[AutoAddAction, BatchAction, BatchNotificationAction]}
         rowActions={[NotificationActions]}
+        mobileToolbarActions={[
+          {
+            label: "Add Amazon Product",
+            icon: "ri:amazon-fill",
+            hasGetterFn: true,
+            onClick: ({ getterFunction }) =>
+              setAmazonModal({
+                open: true,
+                getterFn: getterFunction,
+              }),
+          },
+        ]}
       />
     </div>
   );

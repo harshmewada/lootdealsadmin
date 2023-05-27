@@ -51,6 +51,8 @@ export const categoryTypes = {
 };
 
 export const commonTypes = {
+  SET_SELECTED: "SET_SELECTED",
+
   OPEN_IMAGE_PREVIEW: "OPEN_IMAGE_PREVIEW",
 
   CLOSE_IMAGE_PREVIEW: "CLOSE_IMAGE_PREVIEW",

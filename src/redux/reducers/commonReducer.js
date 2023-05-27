@@ -20,6 +20,7 @@ const initialState = {
   categories: [],
   products: [],
   setting: {},
+  selected: [],
 };
 
 const commonReducer = createReducer(initialState, (builder) => {
@@ -55,6 +56,10 @@ const commonReducer = createReducer(initialState, (builder) => {
     })
     .addCase(settingTypes.GET_SETTING, (state, action) => {
       state.setting = action.payload.data;
+    })
+
+    .addCase(commonTypes.SET_SELECTED, (state, action) => {
+      state.selected = action.payload || [];
     });
 });
 
