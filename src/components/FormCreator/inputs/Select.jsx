@@ -25,6 +25,7 @@ const SelectField = ({
   options = [],
   optionLabel,
   optionValue,
+  multiple,
 }) => {
   const {
     field: { onChange, value },
@@ -59,6 +60,7 @@ const SelectField = ({
         onChange={onChange}
         value={value}
         id={name}
+        multiple={multiple}
       >
         {options.map((el) => (
           <MenuItem key={el[optionValue]} value={el[optionValue]}>

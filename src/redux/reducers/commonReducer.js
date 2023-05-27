@@ -2,6 +2,7 @@ import { createReducer } from "@reduxjs/toolkit";
 import {
   categoryTypes,
   commonTypes,
+  dashboardTypes,
   offerTypes,
   platformTypes,
   productTypes,
@@ -21,6 +22,10 @@ const initialState = {
   products: [],
   setting: {},
   selected: [],
+  dashboard: {
+    products: null,
+    users: null,
+  },
 };
 
 const commonReducer = createReducer(initialState, (builder) => {
@@ -60,6 +65,10 @@ const commonReducer = createReducer(initialState, (builder) => {
 
     .addCase(commonTypes.SET_SELECTED, (state, action) => {
       state.selected = action.payload || [];
+    })
+
+    .addCase(dashboardTypes.GET_DASHBOARD_DATA, (state, action) => {
+      state.dashboard = action.payload.data;
     });
 });
 

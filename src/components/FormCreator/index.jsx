@@ -31,7 +31,7 @@ const FormCreator = React.forwardRef(
     } = methods;
 
     useSearchForm({ isSearchForm: isSearchForm, formRef, control, formFields });
-    console.log("form errors", errors);
+    console.log("form errors", errors, formData);
     return (
       <FormProvider>
         <form onSubmit={handleSubmit(onSubmit)}>

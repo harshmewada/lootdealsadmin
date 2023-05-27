@@ -10,6 +10,10 @@ export const settingTypes = {
   UPDATE_SETTING: "UPDATE_SETTING",
 };
 
+export const dashboardTypes = {
+  GET_DASHBOARD_DATA: "GET_DASHBOARD_DATA",
+};
+
 export const productTypes = {
   GET_AMAZON_PRODUCT: "GET_AMAZON_PRODUCT",
 

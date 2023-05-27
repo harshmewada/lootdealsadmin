@@ -2,6 +2,10 @@ export const userApi = {
   LOGIN: "/auth/login",
 };
 
+export const dashboardApi = {
+  GET_DASHBOARD_DATA: "/dashboardreports/dashboard",
+};
+
 export const settingApi = {
   UPDATE_SETTING: "/setting",
   GET_SETTING: "/setting",

@@ -181,6 +181,7 @@ const PageCreator = ({
           dialogWidth={dialogWidth || "xl"}
           isLoading={isFormLoading}
           selectOptions={selectOptions}
+          mode={modalState.mode}
         />
         <DeleteModal
           open={modalState.open && modalState.mode === FORMMODE.DELETE}
