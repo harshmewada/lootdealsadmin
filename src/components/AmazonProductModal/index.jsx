@@ -149,6 +149,7 @@ const AmazonProductModal = ({
                 platformId: amazonPlatformId,
                 isAutoAdded: true,
                 ...productData,
+                categoryId: [],
               }}
               isLoading={isLoading}
               selectOptions={selectOptions}

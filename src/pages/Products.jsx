@@ -10,6 +10,7 @@ import {
   batchDeleteProduct,
   deleteProduct,
   editProduct,
+  expireProducts,
   getProducts,
   sendProductNotification,
 } from "../redux/actions/productActions";
@@ -25,6 +26,7 @@ import AmazonProductModal from "../components/AmazonProductModal";
 import Iconify from "../components/layout/iconify/Iconify";
 import useResponsive from "../hooks/useResponsive";
 import { addTableColumnMinWidth } from "../utils/addTableColumnMinWidth";
+import { LoadingButton } from "@mui/lab";
 
 const Products = () => {
   const dispatch = useDispatch();
@@ -174,6 +176,10 @@ const Products = () => {
   const isTableLoading = useSelector((state) =>
     loadingSelector(state, productTypes.GET_PRODUCTS)
   );
+
+  const isExpireRequestLoading = useSelector((state) =>
+    loadingSelector(state, productTypes.EXPIRE_PRODUCTS)
+  );
   const isFormLoading = useSelector((state) =>
     loadingSelector(state, [
       productTypes.ADD_PRODUCT,
@@ -235,6 +241,26 @@ const Products = () => {
       >
         Add Amazon Product
       </Button>
+    );
+  };
+
+  const ExpireAction = ({ getterFunction }) => {
+    return (
+      <LoadingButton
+        loading={isExpireRequestLoading}
+        key="ExpireAction"
+        variant="contained"
+        startIcon={<Iconify icon={"tabler:clock-x"} />}
+        onClick={
+          () => dispatch(expireProducts({ callBack: getterFunction }))
+          // setAmazonModal({
+          //   open: true,
+          //   getterFn: getterFunction,
+          // })
+        }
+      >
+        Expire Products
+      </LoadingButton>
     );
   };
 
@@ -304,6 +330,7 @@ const Products = () => {
           isActive: true,
           description: description,
           isManyProducts: false,
+          isExpired: false,
         }}
         dialogWidth="lg"
         isLoading={isTableLoading}
@@ -318,7 +345,12 @@ const Products = () => {
           platformId: platforms?.data || [],
           categoryId: categories?.data || [],
         }}
-        toolbarActions={[AutoAddAction, BatchAction, BatchNotificationAction]}
+        toolbarActions={[
+          ExpireAction,
+          AutoAddAction,
+          BatchAction,
+          BatchNotificationAction,
+        ]}
         rowActions={[NotificationActions]}
         mobileToolbarActions={[
           {
@@ -475,7 +507,7 @@ const formFields = [
     hideAt: FORMMODE.ADD,
     label: "Expired",
     placeholder: "Enter Expired",
-    required: true,
+    required: false,
     disabled: false,
     readOnly: false,
     width: 3,

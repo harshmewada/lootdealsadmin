@@ -127,6 +127,17 @@ const formFields = [
   },
 
   {
+    type: "text",
+    name: "whatsappLink",
+    label: "whatsApp Link",
+    placeholder: "Enter whatsApp Link",
+    required: false,
+    disabled: false,
+    readOnly: false,
+    width: 12,
+  },
+
+  {
     type: "boolean",
     name: "showAds",
     label: "Enable Ads",

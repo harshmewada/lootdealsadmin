@@ -32,6 +32,8 @@ export const offerApi = {
 export const productApi = {
   GET_PRODUCTS: "/product",
 
+  EXPIRE_PRODUCTS: "/product/manuallyExpire",
+
   GET_AMAZON_PRODUCT: `/product/fromAmazon`,
 
   GET_ALL_PRODUCTS: "/product/all",

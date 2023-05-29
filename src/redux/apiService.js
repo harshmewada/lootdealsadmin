@@ -82,6 +82,7 @@ export const apiService =
         dispatch({ type: loadingTypes.REMOVE_LOADING, payload: action.type });
         dispatch({ type: action.type, payload: response.data });
       } catch (error) {
+        console.log("error", error);
         if (error.toJSON().message === "Network Error") {
           dispatch(
             showSnackbar({

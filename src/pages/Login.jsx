@@ -76,7 +76,7 @@ export default function LoginPage() {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    defaultValues: { email: "harsh@gmail.com", password: "11111111" },
+    defaultValues: { email: "", password: "" },
   });
 
   useEffect(() => {

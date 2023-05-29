@@ -45,6 +45,20 @@ export const addProduct = ({ data, callBack }) => {
   };
 };
 
+export const expireProducts = ({ callBack }) => {
+  return {
+    type: productTypes.EXPIRE_PRODUCTS,
+    request: {
+      method: REQUESTMETHOD.POST,
+      url: productApi.EXPIRE_PRODUCTS,
+      isFormData: false,
+      enableMessages: true,
+      successMessage: "Products Expired Successfully",
+      failMessage: "Failed to expire Product",
+      callBack,
+    },
+  };
+};
 export const editProduct = ({ data, callBack }) => {
   return {
     type: productTypes.UPDATE_PRODUCT,
