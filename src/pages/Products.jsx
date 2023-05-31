@@ -331,6 +331,7 @@ const Products = () => {
           description: description,
           isManyProducts: false,
           isExpired: false,
+          categoryId: [],
         }}
         dialogWidth="lg"
         isLoading={isTableLoading}

@@ -76,7 +76,7 @@ const ImageInput = ({
       <input
         type={"file"}
         ref={inputRef}
-        accept={accept || ".png, .jpg, .jpeg, .svg"}
+        accept={accept || ".png, .jpg, .jpeg, .webp"}
         style={{ display: "none" }}
         onChange={(e) => {
           onChange({

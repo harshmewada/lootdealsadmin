@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FORMMODE } from "../../enums";
 import { productTypes } from "../../redux/types";
@@ -84,17 +84,21 @@ const AmazonProductModal = ({
     setProductData();
     setProductUrl();
     handleClose();
+    // formRef.current.reset();
   };
 
   const amazonPlatformId = selectOptions?.platformId?.find(
     (el) => el.platformName === "Amazon"
   )?._id;
 
-  useEffectOnce(() => {
+  useEffect(() => {
     setProductData();
-    if (formRef.current) {
-      formRef.current.reset({});
-    }
+    setProductUrl();
+    console.log("setProductData", productData);
+
+    // if (formRef.current) {
+    //   formRef.current.reset({});
+    // }
   }, [open]);
   return (
     <Dialog
