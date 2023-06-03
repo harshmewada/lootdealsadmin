@@ -45,6 +45,12 @@ const sidebarConfig = [
     path: "/setting",
     icon: <Iconify icon="ant-design:setting-twotone" />,
   },
+
+  {
+    title: "App Errors",
+    path: "/apperrors",
+    icon: <Iconify icon="ant-design:warning-twotone" />,
+  },
   // {
   //   title: "blog",
   //   path: "/dashboard/blog",

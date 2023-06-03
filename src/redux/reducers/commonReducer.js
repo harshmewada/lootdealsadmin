@@ -1,5 +1,6 @@
 import { createReducer } from "@reduxjs/toolkit";
 import {
+  appErrorTypes,
   categoryTypes,
   commonTypes,
   dashboardTypes,
@@ -26,6 +27,7 @@ const initialState = {
     products: null,
     users: null,
   },
+  appErrors: [],
 };
 
 const commonReducer = createReducer(initialState, (builder) => {
@@ -55,6 +57,9 @@ const commonReducer = createReducer(initialState, (builder) => {
     })
     .addCase(categoryTypes.GET_ALL_CATEGORYS, (state, action) => {
       state.categories = action.payload.data;
+    })
+    .addCase(appErrorTypes.GET_APP_ERRORS, (state, action) => {
+      state.appErrors = action.payload.data;
     })
     .addCase(productTypes.GET_PRODUCTS, (state, action) => {
       state.products = action.payload.data;

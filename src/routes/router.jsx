@@ -12,6 +12,7 @@ import Products from "../pages/Products";
 import Settings from "../pages/Settings";
 import Users from "../pages/Users";
 import ProtectedRoute from "./ProtectedRoute";
+import AppErrors from "../pages/AppErrors";
 export function Router() {
   const router = useRoutes([
     {
@@ -62,6 +63,13 @@ export function Router() {
 
           path: "/setting",
           element: <Settings />,
+        },
+
+        {
+          errorElement: <ErrorBoundary />,
+
+          path: "/apperrors",
+          element: <AppErrors />,
         },
       ],
     },

@@ -4,6 +4,10 @@ export const authTypes = {
   LOGOUT_USER: "LOGOUT_USER",
 };
 
+export const appErrorTypes = {
+  GET_APP_ERRORS: "GET_APP_ERRORS",
+};
+
 export const settingTypes = {
   GET_SETTING: "GET_SETTING",
 

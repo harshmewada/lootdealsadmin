@@ -53,6 +53,7 @@ const PageCreator = ({
   rowActions = [],
   mobileToolbarActions = [],
   mobileRowActionColumnWidth = null,
+  isTableViewOnly = false,
 }) => {
   const theme = useTheme();
   const searchFormRef = useRef();
@@ -326,21 +327,25 @@ const PageCreator = ({
 
               columns={[
                 ...tableHeaders,
-                {
-                  field: "actions",
-                  type: "actions",
-                  label: "Actions",
-                  flex: 1,
-                  getActions: (params) => [
-                    <EditActions data={params.row} />,
-                    <DeleteActions data={params.row} />,
-                    ...rowActions.map((El) => <El data={params.row} />),
-                  ],
+                ...[
+                  !isTableViewOnly
+                    ? {
+                        field: "actions",
+                        type: "actions",
+                        label: "Actions",
+                        flex: 1,
+                        getActions: (params) => [
+                          <EditActions data={params.row} />,
+                          <DeleteActions data={params.row} />,
+                          ...rowActions.map((El) => <El data={params.row} />),
+                        ],
 
-                  ...(mobileRowActionColumnWidth && {
-                    minWidth: mobileRowActionColumnWidth,
-                  }),
-                },
+                        ...(mobileRowActionColumnWidth && {
+                          minWidth: mobileRowActionColumnWidth,
+                        }),
+                      }
+                    : [],
+                ],
               ]}
               checkboxSelection={selectable}
               disableColumnFilter={!enableFilters}

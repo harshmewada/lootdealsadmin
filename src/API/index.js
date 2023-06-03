@@ -6,6 +6,10 @@ export const dashboardApi = {
   GET_DASHBOARD_DATA: "/dashboardreports/dashboard",
 };
 
+export const appErrorApi = {
+  GET_APP_ERRORS: "/app-error",
+};
+
 export const settingApi = {
   UPDATE_SETTING: "/setting",
   GET_SETTING: "/setting",
