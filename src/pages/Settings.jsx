@@ -158,6 +158,8 @@ const formFields = [
     width: 4,
   },
 
+
+
   {
     type: "image",
     name: "telegramBannerImage",
@@ -167,5 +169,41 @@ const formFields = [
     disabled: false,
     readOnly: false,
     width: 4,
+  },
+
+  {
+    type: "boolean",
+    name: "showTracking",
+    label: "Show Tracking Section",
+    placeholder: "Show Tracking Section",
+    required: false,
+    disabled: false,
+    readOnly: false,
+    width: 4,
+  },
+
+
+
+  {
+    type: "image",
+    name: "trackingBannerImage",
+    label: "Choose Tracking Banner Image",
+    placeholder: "Choose Tracking Banner Image",
+    required: false,
+    disabled: false,
+    readOnly: false,
+    width: 4,
+  },
+
+  {
+    type: "richtext",
+    name: "trackingInstructions",
+    label: "Tracking Instructions",
+    placeholder: "Enter Tracking Instructions",
+    required: false,
+    disabled: false,
+    readOnly: false,
+    width: 12,
+    mobileWidth: 12,
   },
 ];
